@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build:
-    name: Build Android APK
+    name: Build Etheral
     runs-on: ubuntu-latest
 
     steps:
@@ -25,13 +25,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Install Android SDK packages
+      - name: Check Android SDK
         run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager --install \
-            "platform-tools" \
-            "platforms;android-35" \
-            "build-tools;35.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls -la "$ANDROID_HOME"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -42,11 +39,11 @@ jobs:
         run: |
           unzip -q Etheral-Worldwide-Music-Android-Project.zip -d source
 
-      - name: Build Etheral APK
+      - name: Build APK
         run: |
           gradle -p source --no-daemon assembleDebug
 
-      - name: Upload Etheral APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Etheral-APK
